@@ -1,0 +1,60 @@
+💸 FinFlow Pro — Smart Finance Dashboard
+
+A modern, feature-rich personal finance management web app that helps users track income, expenses, budgets, and financial insights with an intuitive UI.
+
+🚀 Features
+🔐 Authentication
+Demo login system (Admin & Viewer roles)
+Role-based UI access
+Session persistence using localStorage
+📊 Dashboard Overview
+Total Balance, Income, Expenses, Savings Rate
+Month-over-Month comparison
+Smart financial insights
+💳 Transactions Management
+Add / Edit / Delete transactions
+Filter by:
+Date range
+Category
+Type (Income / Expense)
+Search keywords
+Pagination support
+📈 Data Visualization
+Balance trend charts
+Category-wise expense breakdown
+Monthly analytics
+💡 Smart Insights
+Budget overuse alerts
+Spending trend analysis
+Savings performance tracking
+🎯 Budget Management
+Set category-wise budgets
+Track overspending
+Alerts for threshold limits
+🔁 Recurring Transactions
+Identify recurring income/expenses
+Auto insights generation
+🌍 Multi-Currency Support
+INR, USD, EUR, GBP
+Real-time conversion logic
+🌙 Dark Mode
+Toggle between light & dark themes
+Persistent theme settings
+📤 Export Options
+Export data as:
+CSV
+JSON
+PDF reports
+🛠️ Tech Stack
+Frontend: HTML5, CSS3, JavaScript (Vanilla)
+Styling: Custom CSS with modern UI design
+State Management: JavaScript objects
+Storage: Browser LocalStorage
+Charts: Canvas-based rendering
+Deployment: GitHub Pages CI/CD
+📂 Project Structure
+📁 FinFlow-Pro
+│── index.html      # Main UI structure
+│── style.css       # Styling and themes
+│── app.js          # Core logic & features
+│── deploy.yml      # GitHub Pages deployment workflow
