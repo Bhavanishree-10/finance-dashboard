@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FinFlow Pro — Smart Finance Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ═══ LOGIN SCREEN ═══ -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-bg-mesh"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon-big">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="currentColor"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+      </div>
+      <span>FinFlow <span class="pro-badge">PRO</span></span>
+    </div>
+    <h2 class="login-title">Welcome back</h2>
+    <p class="login-sub">Sign in to your financial dashboard</p>
+    <div class="login-form">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com" value="admin@finflow.in"/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" value="admin123"/>
+      </div>
+      <div class="login-error hidden" id="loginError">Invalid email or password</div>
+      <button class="btn-login" onclick="doLogin()">Sign In →</button>
+    </div>
+    <div class="login-users">
+      <p class="demo-label">Demo accounts:</p>
+      <div class="demo-btns">
+        <button onclick="fillDemo('admin@finflow.in','admin123')">👑 Admin</button>
+        <button onclick="fillDemo('viewer@finflow.in','viewer123')">👁 Viewer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAIN APP ═══ -->
+<div id="appShell" class="app-shell hidden">
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="currentColor"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+    </div>
+    <span class="logo-text">FinFlow <span class="pro-badge-sm">PRO</span></span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="#" class="nav-item active" data-section="overview">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Overview
+    </a>
+    <a href="#" class="nav-item" data-section="transactions">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 10h16M4 14h10M4 18h7"/></svg>
+      Transactions
+    </a>
+    <a href="#" class="nav-item" data-section="budgets">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      Budgets
+    </a>
+    <a href="#" class="nav-item" data-section="insights">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-8"/></svg>
+      Insights
+    </a>
+    
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="dark-mode-row">
+      <span class="dm-label">Dark Mode</span>
+      <button class="dm-toggle" id="dmToggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+        <span class="dm-knob"></span>
+      </button>
+    </div>
+    <div class="currency-row">
+      <span class="dm-label">Currency</span>
+      <select class="currency-select" id="currencySelect" onchange="changeCurrency(this.value)">
+        <option value="INR">₹ INR</option>
+        <option value="USD">$ USD</option>
+        <option value="EUR">€ EUR</option>
+        <option value="GBP">£ GBP</option>
+      </select>
+    </div>
+    <div class="user-card" id="userCard">
+      <div class="user-avatar" id="sidebarAvatar">AK</div>
+      <div class="user-info">
+        <p class="user-name" id="sidebarName">Arun Kumar</p>
+        <p class="user-role-badge" id="userRoleBadge">Admin</p>
+      </div>
+      <button class="logout-btn" onclick="doLogout()" title="Sign out">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile Header -->
+<header class="mobile-header">
+  <button class="hamburger" onclick="toggleSidebar()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
+  <span class="logo-text">FinFlow <span class="pro-badge-sm">PRO</span></span>
+  <button class="dm-toggle-mobile" onclick="toggleDarkMode()">🌙</button>
+</header>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- ══ MAIN CONTENT ══ -->
+<main class="main-content">
+
+  <!-- ── OVERVIEW ── -->
+  <section class="section active" id="section-overview">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle" id="welcomeMsg">Welcome back. Here's your financial snapshot.</p>
+      </div>
+      <div class="header-actions">
+        <span class="date-badge" id="currentDate"></span>
+        <button class="btn-add admin-only hidden" onclick="openModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Add
+        </button>
+        <div class="export-menu-wrap">
+          <button class="btn-export" onclick="toggleExportMenu()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Export ▾
+          </button>
+          <div class="export-dropdown hidden" id="exportDropdown">
+            <button onclick="exportData('csv');toggleExportMenu()">📊 CSV</button>
+            <button onclick="exportData('json');toggleExportMenu()">📋 JSON</button>
+            <button onclick="exportData('pdf');toggleExportMenu()">📄 PDF Report</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="cards-grid">
+      <div class="summary-card card-balance">
+        <div class="card-header"><span class="card-label">Total Balance</span><div class="card-icon balance-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div></div>
+        <div class="card-amount" id="totalBalance">₹0</div>
+        <div class="card-change" id="balanceChangeEl"><span id="balanceChange">—</span></div>
+      </div>
+      <div class="summary-card card-income">
+        <div class="card-header"><span class="card-label">Monthly Income</span><div class="card-icon income-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div></div>
+        <div class="card-amount" id="totalIncome">₹0</div>
+        <div class="card-change" id="incomeChangeEl"><span id="incomeChange">—</span></div>
+      </div>
+      <div class="summary-card card-expense">
+        <div class="card-header"><span class="card-label">Monthly Expenses</span><div class="card-icon expense-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></div></div>
+        <div class="card-amount" id="totalExpense">₹0</div>
+        <div class="card-change" id="expenseChangeEl"><span id="expenseChange">—</span></div>
+      </div>
+      <div class="summary-card card-savings">
+        <div class="card-header"><span class="card-label">Savings Rate</span><div class="card-icon savings-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div></div>
+        <div class="card-amount" id="savingsRate">0%</div>
+        <div class="card-change positive"><span id="savingsDesc">vs last month</span></div>
+      </div>
+    </div>
+
+    <!-- Smart Insights Bar -->
+    <div class="smart-bar" id="smartInsightsBar"></div>
+
+    <!-- Charts Row -->
+    <div class="charts-row">
+      <div class="chart-card chart-main">
+        <div class="chart-header">
+          <div><h3 class="chart-title">Balance Trend</h3><p class="chart-subtitle">Monthly overview</p></div>
+          <div class="chart-tabs">
+            <button class="chart-tab active" onclick="switchChartPeriod('6m',this)">6M</button>
+            <button class="chart-tab" onclick="switchChartPeriod('3m',this)">3M</button>
+          </div>
+        </div>
+        <div class="chart-wrapper"><canvas id="balanceTrendChart"></canvas></div>
+      </div>
+      <div class="chart-card chart-side">
+        <div class="chart-header"><div><h3 class="chart-title">Spending by Category</h3><p class="chart-subtitle">This month</p></div></div>
+        <div class="chart-wrapper donut-wrapper">
+          <canvas id="categoryChart"></canvas>
+          <div class="donut-center"><span class="donut-label">Expenses</span><span class="donut-value" id="donutTotal">₹0</span></div>
+        </div>
+        <div class="legend-list" id="categoryLegend"></div>
+      </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="recent-section">
+      <div class="section-header">
+        <h3 class="section-title">Recent Transactions</h3>
+        <button class="see-all-btn" onclick="switchSection('transactions')">See all →</button>
+      </div>
+      <div class="transactions-list" id="recentTransactions"></div>
+    </div>
+  </section>
+
+  <!-- ── TRANSACTIONS ── -->
+  <section class="section" id="section-transactions">
+    <div class="page-header">
+      <div><h1 class="page-title">Transactions</h1><p class="page-subtitle">Manage and track all your financial activity.</p></div>
+      <div class="header-actions">
+        <button class="btn-export" onclick="exportData('csv')">Export CSV</button>
+        <button class="btn-add admin-only hidden" onclick="openModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Add Transaction
+        </button>
+      </div>
+    </div>
+    <div class="filters-bar">
+      <div class="search-box">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search transactions..." id="searchInput" oninput="debouncedFilter()"/>
+      </div>
+      <div class="filter-group">
+        <select id="filterType" onchange="filterTransactions()" class="filter-select">
+          <option value="">All Types</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+        <select id="filterCategory" onchange="filterTransactions()" class="filter-select">
+          <option value="">All Categories</option>
+        </select>
+        <select id="sortBy" onchange="filterTransactions()" class="filter-select">
+          <option value="date-desc">Newest First</option>
+          <option value="date-asc">Oldest First</option>
+          <option value="amount-desc">Highest Amount</option>
+          <option value="amount-asc">Lowest Amount</option>
+        </select>
+        <input type="date" id="filterDateFrom" onchange="filterTransactions()" class="filter-select" placeholder="From"/>
+        <input type="date" id="filterDateTo" onchange="filterTransactions()" class="filter-select" placeholder="To"/>
+        <button class="clear-btn" onclick="clearFilters()">Clear</button>
+      </div>
+    </div>
+    <div class="txn-stats-bar" id="txnStats"></div>
+    <div class="table-card">
+      <div class="table-wrapper">
+        <table class="txn-table" id="transactionsTable">
+          <thead>
+            <tr>
+              <th onclick="toggleSort('date')">Date <span class="sort-arrow">↕</span></th>
+              <th>Description</th>
+              <th onclick="toggleSort('category')">Category <span class="sort-arrow">↕</span></th>
+              <th>Type</th>
+              <th onclick="toggleSort('amount')" style="text-align:right">Amount <span class="sort-arrow">↕</span></th>
+              <th class="admin-only hidden">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="transactionsBody"></tbody>
+        </table>
+        <div class="empty-state hidden" id="emptyState">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 6h16M4 10h16M4 14h10M4 18h7"/></svg>
+          <p>No transactions found</p><span>Try adjusting your filters</span>
+        </div>
+      </div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </section>
+
+  <!-- ── BUDGETS ── -->
+  <section class="section" id="section-budgets">
+    <div class="page-header">
+      <div><h1 class="page-title">Budgets</h1><p class="page-subtitle">Set monthly spending limits and track usage.</p></div>
+      <div class="header-actions">
+        <button class="btn-add admin-only hidden" onclick="openBudgetModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Set Budget
+        </button>
+      </div>
+    </div>
+    <div class="budget-summary-row" id="budgetSummaryRow"></div>
+    <div class="budgets-grid" id="budgetsGrid"></div>
+  </section>
+
+  <!-- ── INSIGHTS ── -->
+  <section class="section" id="section-insights">
+    <div class="page-header">
+      <div><h1 class="page-title">Insights</h1><p class="page-subtitle">Understand your spending patterns and financial health.</p></div>
+    </div>
+    <div class="insights-grid">
+      <div class="insight-card highlight-card">
+        <div class="insight-icon">🔥</div>
+        <div class="insight-content"><p class="insight-label">Highest Spending Category</p><p class="insight-value" id="highestCategory">—</p><p class="insight-desc" id="highestCategoryAmt">—</p></div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">📈</div>
+        <div class="insight-content"><p class="insight-label">Best Saving Month</p><p class="insight-value" id="bestSavingMonth">—</p><p class="insight-desc" id="bestSavingDesc">—</p></div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">⚡</div>
+        <div class="insight-content"><p class="insight-label">Avg Daily Spend</p><p class="insight-value" id="avgDailySpend">—</p><p class="insight-desc">This month</p></div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">🎯</div>
+        <div class="insight-content"><p class="insight-label">Budget Utilization</p><p class="insight-value" id="budgetUtil">—</p><p class="insight-desc">vs income this month</p></div>
+      </div>
+    </div>
+
+    <!-- MoM Insights -->
+    <div class="mom-insights-card" id="momInsights"></div>
+
+    <!-- Recurring -->
+    <div class="recurring-section">
+      <div class="section-header"><h3 class="section-title">Recurring Transactions</h3><span class="tag-pill">Auto-detected</span></div>
+      <div class="recurring-list" id="recurringList"></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-row">
+      <div class="chart-card full-width-chart">
+        <div class="chart-header"><div><h3 class="chart-title">Monthly Income vs Expenses</h3><p class="chart-subtitle">Last 6 months comparison</p></div></div>
+        <div class="chart-wrapper bar-chart-wrapper"><canvas id="monthlyComparisonChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="section-header" style="padding:1.5rem 1.5rem 0;"><h3 class="section-title">Category Breakdown</h3></div>
+      <div class="table-wrapper" style="padding:1rem 1.5rem 1.5rem;">
+        <table class="insights-table" id="insightsTable">
+          <thead><tr><th>Category</th><th>Transactions</th><th>Total Spent</th><th>Avg per Txn</th><th>vs Last Month</th><th>Share</th></tr></thead>
+          <tbody id="insightsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── AI ASSISTANT ── -->
+  <section class="section" id="section-ai">
+    <div class="page-header">
+      <div><h1 class="page-title">AI Assistant</h1><p class="page-subtitle">Ask anything about your finances.</p></div>
+    </div>
+    <div class="ai-chat-container">
+      <div class="ai-messages" id="aiMessages">
+        <div class="ai-msg bot">
+          <div class="bot-avatar">✨</div>
+          <div class="msg-bubble">Hi! I'm your FinFlow AI assistant. Ask me anything about your spending, savings, or financial goals. Try: <br><br>
+            <span class="ai-chip" onclick="sendAiChip(this)">How much did I spend on food?</span>
+            <span class="ai-chip" onclick="sendAiChip(this)">What's my savings rate?</span>
+            <span class="ai-chip" onclick="sendAiChip(this)">Compare this month vs last</span>
+            <span class="ai-chip" onclick="sendAiChip(this)">Which category should I cut?</span>
+          </div>
+        </div>
+      </div>
+      <div class="ai-input-row">
+        <input type="text" id="aiInput" placeholder="Ask about your finances..." onkeydown="if(event.key==='Enter')sendAiMessage()"/>
+        <button class="ai-send-btn" onclick="sendAiMessage()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main><!-- /main-content -->
+</div><!-- /appShell -->
+
+<!-- ═══ MODALS ═══ -->
+
+<!-- Add/Edit Transaction -->
+<div class="modal-overlay hidden" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Add Transaction</h3>
+      <button class="modal-close" onclick="closeModalDirect()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label>Description</label>
+          <input type="text" id="formDesc" placeholder="e.g., Grocery shopping" maxlength="100"/>
+        </div>
+        <div class="form-group">
+          <label>Amount (₹)</label>
+          <input type="number" id="formAmount" placeholder="0" min="1" step="1"/>
+        </div>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="formDate"/>
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="formType" onchange="syncCategoryOptions()">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="formCategory"></select>
+        </div>
+        <div class="form-group full-width recurring-toggle-row">
+          <label class="checkbox-label">
+            <input type="checkbox" id="formRecurring"/>
+            <span>Mark as recurring (monthly)</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModalDirect()">Cancel</button>
+      <button class="btn-primary-green" onclick="saveTransaction()">Save Transaction</button>
+    </div>
+  </div>
+</div>
+
+<!-- Budget Modal -->
+<div class="modal-overlay hidden" id="budgetModalOverlay" onclick="closeBudgetModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Set Monthly Budget</h3>
+      <button class="modal-close" onclick="closeBudgetModalDirect()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Category</label>
+        <select id="budgetCategory">
+          <option value="Food & Dining">Food & Dining</option>
+          <option value="Transport">Transport</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Healthcare">Healthcare</option>
+          <option value="Utilities">Utilities</option>
+          <option value="Housing">Housing</option>
+          <option value="Investment">Investment</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <label>Monthly Limit (₹)</label>
+        <input type="number" id="budgetAmount" placeholder="e.g., 5000" min="100"/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeBudgetModalDirect()">Cancel</button>
+      <button class="btn-primary-green" onclick="saveBudget()">Save Budget</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast"></div>
+
+<!-- Skeleton Loader -->
+<div class="skeleton-overlay hidden" id="skeletonOverlay">
+  <div class="skeleton-inner">
+    <div class="sk-bar sk-w60"></div>
+    <div class="sk-bar sk-w40"></div>
+    <div class="sk-cards"><div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div></div>
+    <div class="sk-bar sk-w80"></div>
+    <div class="sk-bar sk-w60"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
